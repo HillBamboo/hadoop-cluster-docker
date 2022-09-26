@@ -4,6 +4,9 @@
 N=${1:-3}
 
 
+docker ps | grep hadoop-slave | awk '{print $1}' | xargs -I{} docker stop {}
+docker ps | grep hadoop-master | awk '{print $1}' | xargs -I{} docker stop {}
+
 # start hadoop master container
 sudo docker rm -f hadoop-master &> /dev/null
 echo "start hadoop-master container..."
@@ -13,7 +16,8 @@ sudo docker run -itd \
                 -p 8088:8088 \
                 --name hadoop-master \
                 --hostname hadoop-master \
-                kiwenlau/hadoop:1.0 &> /dev/null
+                -v ~/repos/huo-algos/week03/mapred:/root/mnt \
+                kiwenlau/hadoop:1.0 &> /dev/null 
 
 
 # start hadoop slave container
